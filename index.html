@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Peer Connector | Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to Peer Connector</h2>
+    <button onclick="window.location.href='login.html'">Login</button>
+    <button onclick="window.location.href='register.html'">Register</button>
+    <h3 style="margin-top: 30px;">Thoughts by Students</h3>
+    <div id="projects"></div>
+  </div>
+
+  <script>
+    fetch("http://localhost:5000/api/projects")
+      .then(res => res.json())
+      .then(projects => {
+        const container = document.getElementById("projects");
+        if (projects.length === 0) {
+          container.innerHTML = "<p>Be the first to contribute</p>";
+        } else {
+          container.innerHTML = projects.map(p =>
+            `<div style="text-align:left; background:#f9f9f9; margin-top:10px; padding:15px; border-radius:8px;">
+              <h4>${p.title}</h4>
+              <p>${p.description}</p>
+              <small>Contributors: ${p.contributors.join(', ')}</small>
+            </div>`
+          ).join('');
+        }
+      })
+      .catch(err => {
+        document.getElementById("projects").innerHTML = "<p>Error loading projects.</p>";
+      });
+  </script>
+</body>
+</html>
